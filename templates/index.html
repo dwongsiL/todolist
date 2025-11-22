@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpsLog - Nhiệm Vụ Bí Mật</title>
+    <style>
+        body { font-family: sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; background-color: #f0f2f5; }
+        .container { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        h1 { color: #1a73e8; text-align: center; }
+        .input-group { margin-bottom: 20px; }
+        input { width: 70%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; }
+        button { width: 25%; padding: 10px; background: #1a73e8; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        ul { list-style: none; padding: 0; }
+        li { padding: 10px; border-bottom: 1px solid #eee; }
+        .error { color: red; text-align: center; margin-bottom: 10px; }
+        .footer { text-align: center; font-size: 0.8em; color: #888; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛡️ OpsLog Sentinel (Python Mode)</h1>
+        
+        <!-- Hiện lỗi nếu có (Logic từ Python truyền sang) -->
+        {% if error %}
+        <div class="error">⚠️ Lỗi hệ thống: {{ error }}</div>
+        {% endif %}
+
+        <!-- Form gửi dữ liệu - Gửi thẳng về Python -->
+        <form method="POST" action="/" class="input-group">
+            <input type="text" name="content" placeholder="Nhập mật lệnh mới..." required>
+            <button type="submit">Gửi Lệnh</button>
+        </form>
+
+        <ul>
+            <!-- Vòng lặp Python ngay trong HTML -->
+            {% for task in tasks %}
+            <li>
+                📝 {{ task[1] }}
+            </li>
+            {% else %}
+            <li style="text-align: center; color: gray;">Chưa có nhiệm vụ nào.</li>
+            {% endfor %}
+        </ul>
+        
+        <div class="footer">Server: {{ hostname }}</div>
+    </div>
+</body>
+</html>
