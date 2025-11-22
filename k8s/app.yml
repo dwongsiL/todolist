@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: todolist-app
+spec:
+    replicas: 3
+    selector:
+        matchLabels:
+            app: todolist-app
+    template:
+        metadata:
+            labels:
+                app: todolist-app
+        spec:
+            containers:
+              - name: todolist-app
+                image: tsots07/todolist_app:latest 
+                ports:
+                  - containerPort: 3007
+                env:
+                  - name: DB_HOST
+                    value: "todo-service"
+                  - name: DB_NAME
+                    valueFrom:
+                      secretKeyRef:
+                        name: todolist-secret
+                        key: postgres-db
+                  - name: DB_USER
+                    valueFrom:
+                      secretKeyRef:
+                        name: todolist-secret
+                        key: postgres-user
+                  - name: DB_PASS
+                    valueFrom: 
+                      secretKeyRef:
+                        name: todolist-secret
+                        key: postgres-password
+                resources:
+                  limits:
+                    memory: "128Mi"
+                    cpu: "500m"  
+                  
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: todolist-service
+spec:
+    type: NodePort
+    selector:
+        app: todolist-app
+    ports:
+        - port: 80
+          targetPort: 3007
+          nodePort: 30007

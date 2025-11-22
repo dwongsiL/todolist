@@ -53,6 +53,7 @@ def index():
                 cur.close ()
                 app.logger.info(f"Task added successfully: {content}")
             except Exception as e:
+                conn.rollback()
                 app.logger.error(f"Failed to add task: {e}")
                 error = str(e)
     
@@ -65,6 +66,7 @@ def index():
             cur.close()
             conn.close()
         except Exception as e:
+            conn.rollback()
             app.logger.error(f"Fetch tasks errors: {e}")
             error = str(e)
     else:
