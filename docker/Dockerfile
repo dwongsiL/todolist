@@ -16,7 +16,7 @@ COPY ./requirements.txt /app/requirements.txt
 
 RUN pip install --no-cache-dir -r requirements.txt --break-system-packages
 
-COPY ./frontend/todolist.py /app/todolist.py
+COPY ./frontend/todolist.py /app/frontend/todolist.py
 
 COPY ./templates/ /app/templates/ 
 
@@ -27,5 +27,7 @@ RUN chown -R appuser:appgroup /app
 USER appuser
 
 EXPOSE 3007
+
+WORKDIR /app/frontend
 
 CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:3007", "todolist:app"]

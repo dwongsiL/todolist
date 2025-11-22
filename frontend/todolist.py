@@ -6,8 +6,9 @@ from flask import Flask, request, jsonify, render_template, redirect, url_for
 
 app = Flask(__name__,template_folder='../templates')
 
-if not os.path.exists("../logs"):
-    os.mkdir("../logs")
+LOG_DIR = "../logs"
+
+os.makedirs(LOG_DIR, exist_ok=True)
 
 file_handler = RotatingFileHandler('../logs/app.log', maxBytes=10240, backupCount=2)
 file_handler.setFormatter(logging.Formatter(
