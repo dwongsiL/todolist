@@ -2,19 +2,23 @@ FROM python:3.12-slim
 
 WORKDIR /app
 
+
+
 RUN apt-get update && apt-get install -y \
     build-essential \
     libpq-dev \
     python3-dev \
     && rm -rf /var/lib/apt/lists/*
 
-COPY requirements.txt /app/requirements.txt
+RUN mkdir -p /app/logs
 
-RUN pip install --no-cache-dir -r requirements.txt
+COPY ./requirements.txt /app/requirements.txt
 
-COPY ./frontend/todolit.py /app/todolit.py
+RUN pip install --no-cache-dir -r requirements.txt --break-system-packages
 
-COPY ./templates/ templates/ 
+COPY ./frontend/todolist.py /app/todolist.py
+
+COPY ./templates/ /app/templates/ 
 
 RUN groupadd -r appgroup && useradd -r -g appgroup appuser
 
@@ -24,4 +28,4 @@ USER appuser
 
 EXPOSE 3007
 
-CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:3007", "todolit:app"]
+CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:3007", "todolist:app"]
